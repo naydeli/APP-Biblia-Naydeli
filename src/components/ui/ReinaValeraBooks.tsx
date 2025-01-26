@@ -109,13 +109,17 @@ const ReinaValeraBooks: React.FC = () => {
     setVersesText([]);
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  }
+
   return (
-    <div className="min-h-screen bg-green-50 flex flex-col text-gray-200">
+    <div className="min-h-screen bg-green-50 flex flex-col text-gray-200 w-full">
       <header className="bg-gradient-to-r from-green-300 to-green-500 py-6 text-center shadow-lg">
-        <h1 className="text-4xl font-extrabold text-white">Reina Valera Biblia</h1>
+        <h1 className="text-4xl font-extrabold text-white">Biblia Reina Valera </h1>
       </header>
       <div className="flex flex-1 overflow-hidden">
-        <div className="bg-white p-6 w-1/2 overflow-y-auto border-r border-gray-300">
+        <div className="bg-white p-6 w-1/3 overflow-y-auto border-r border-gray-300">
           <input
             type="text"
             placeholder="Buscar libro..."
@@ -124,7 +128,7 @@ const ReinaValeraBooks: React.FC = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
           {loading && <p className="text-center text-green-500">Cargando...</p>}
-          <div className="grid grid-cols-8 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {filteredBooks.map((book) => (
               <div
                 key={book.id}
@@ -167,7 +171,7 @@ const ReinaValeraBooks: React.FC = () => {
             </div>
           ) : (
             <div>
-              <div className="flex justify-between mb-6">
+              <div className="flex gap-2 justify-between mb-6">
                 <button
                   className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 focus:outline-none"
                   onClick={() => setSelectedChapter(null)}
@@ -212,16 +216,21 @@ const ReinaValeraBooks: React.FC = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
-            <h3 className="text-xl font-bold text-green-600 mb-4">Texto de los versículos seleccionados:</h3>
-            <button
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+        <div onClick={handleCloseModal} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-2xl shadow-lg shadow-amber-300 max-w-2xl w-full">
+            <h3 className="text-xl font-bold text-green-600 mb-4 flex justify-between items-center">
+                <span>Texto de los versículos seleccionados:</span>
+                <button
+              className="text-gray-600 hover:text-gray-900"
               onClick={() => setShowModal(false)}
             >
               ✕
             </button>
-            <div className="text-lg text-gray-700 whitespace-pre-wrap">
+
+            </h3>
+            
+            <div className="text-lg text-gray-700 whitespace-pre-wrap relative">
+            
               {versesText.join("\n\n")}
             </div>
           </div>

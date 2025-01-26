@@ -4,9 +4,7 @@ import ReinaValeraBooks from './components/ui/ReinaValeraBooks';
 
 const App: React.FC = () => {
   return (
-    <div>
-      <ReinaValeraBooks />
-    </div>
+      <ReinaValeraBooks />  
   );
 };
 

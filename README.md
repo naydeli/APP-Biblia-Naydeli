@@ -1,50 +1,31 @@
-# React + TypeScript + Vite
+Aplicación de la Biblia Reina Valera
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Esta es una aplicación basada en React que permite a los usuarios explorar los libros, capítulos y versículos de la Biblia Reina Valera. Los usuarios pueden buscar libros, navegar por capítulos y ver los textos seleccionados de los versículos en una interfaz amigable.
 
-Currently, two official plugins are available:
+Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Búsqueda de libros:
 
-## Expanding the ESLint configuration
+Los usuarios pueden buscar libros por nombre utilizando una barra de búsqueda.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+La lista de libros se actualiza dinámicamente según la entrada de búsqueda.
 
-- Configure the top-level `parserOptions` property like this:
+Navegación por capítulos y versículos:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+Seleccione un libro para ver sus capítulos.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Seleccione un capítulo para ver sus versículos.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Selección de versículos:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Los usuarios pueden alternar la selección de versículos dentro de un capítulo.
+
+Los versículos seleccionados se resaltan.
+
+Ver textos de versículos:
+
+Obtenga y muestre el contenido de los versículos seleccionados en una ventana modal.
+
+Deselección de versículos:
+
+Los usuarios pueden deseleccionar todos los versículos seleccionados con un solo clic.
