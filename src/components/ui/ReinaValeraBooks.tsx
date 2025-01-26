@@ -4,7 +4,7 @@ import {
   getBookChapters,
   getChapterVerses,
   getVerseText,
-} from "./api"; // Importa las funciones de la API
+} from "./api";
 import { ArrowLeft } from "lucide-react";
 
 const ReinaValeraBooks: React.FC = () => {
@@ -111,31 +111,31 @@ const ReinaValeraBooks: React.FC = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-  }
+  };
 
   return (
     <div className="min-h-screen bg-green-50 flex flex-col text-gray-200 w-full">
-      <header className="bg-gradient-to-r from-green-300 to-green-500 py-6 text-center shadow-lg">
-        <h1 className="text-4xl font-extrabold text-white">Biblia Reina Valera </h1>
+      <header className="bg-gradient-to-r from-green-300 to-green-500 py-4 sm:py-6 text-center shadow-lg">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-white">Biblia Reina Valera</h1>
       </header>
-      <div className="flex flex-1 overflow-hidden">
-        <div className="bg-white p-6 w-1/3 overflow-y-auto border-r border-gray-300">
+      <div className="flex flex-1 overflow-hidden flex-col sm:flex-row">
+        <div className="bg-white p-4 sm:p-6 w-full sm:w-1/3 overflow-y-auto border-b sm:border-b-0 sm:border-r border-gray-300">
           <input
             type="text"
             placeholder="Buscar libro..."
-            className="p-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 mb-9"
+            className="p-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 mb-6"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           {loading && <p className="text-center text-green-500">Cargando...</p>}
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {filteredBooks.map((book) => (
               <div
                 key={book.id}
                 className="p-4 bg-green-200 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition-all flex items-center justify-center"
                 onClick={() => handleBookClick(book)}
               >
-                <h3 className="text-lg font-semibold text-green-600 text-center break-words">
+                <h3 className="text-sm sm:text-lg font-semibold text-green-600 text-center break-words">
                   {book.name}
                 </h3>
               </div>
@@ -143,7 +143,7 @@ const ReinaValeraBooks: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col p-6 overflow-y-auto">
+        <div className="flex-1 flex flex-col p-4 sm:p-6 overflow-y-auto">
           {!selectedBook ? (
             <p className="text-center text-green-500 text-lg">Selecciona un libro para empezar</p>
           ) : !selectedChapter ? (
@@ -154,15 +154,15 @@ const ReinaValeraBooks: React.FC = () => {
               >
                 <ArrowLeft className="mr-2 inline-block" /> Volver a los libros
               </button>
-              <h2 className="text-2xl font-bold mb-4 text-green-600">{selectedBook.name}</h2>
-              <div className="grid grid-cols-6 gap-4">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-green-600">{selectedBook.name}</h2>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4">
                 {chapters.map((chapter) => (
                   <div
                     key={chapter.id}
-                    className="p-4 bg-green-200 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition-all flex items-center justify-center"
+                    className="p-2 sm:p-4 bg-green-200 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition-all flex items-center justify-center"
                     onClick={() => handleChapterClick(chapter)}
                   >
-                    <h3 className="text-lg font-semibold text-green-600 text-center break-words">
+                    <h3 className="text-sm sm:text-lg font-semibold text-green-600 text-center break-words">
                       {chapter.reference}
                     </h3>
                   </div>
@@ -171,7 +171,7 @@ const ReinaValeraBooks: React.FC = () => {
             </div>
           ) : (
             <div>
-              <div className="flex gap-2 justify-between mb-6">
+              <div className="flex flex-wrap gap-2 justify-between mb-6">
                 <button
                   className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 focus:outline-none"
                   onClick={() => setSelectedChapter(null)}
@@ -182,28 +182,28 @@ const ReinaValeraBooks: React.FC = () => {
                   className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 focus:outline-none"
                   onClick={deselectAllVerses}
                 >
-                  Deseleccionar todos los versículos
+                  Deseleccionar todos
                 </button>
                 <button
                   className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 focus:outline-none"
                   onClick={fetchVersesText}
                   disabled={selectedVerses.length === 0 || loading}
                 >
-                  {loading ? "Cargando..." : "Buscar textos seleccionados"}
+                  {loading ? "Cargando..." : "Buscar textos"}
                 </button>
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
                 {verses.map((verse) => (
                   <div
                     key={verse.id}
-                    className={`p-4 ${
+                    className={`p-2 sm:p-4 ${
                       selectedVerses.some((v) => v.id === verse.id)
                         ? "bg-green-400"
                         : "bg-green-200"
                     } rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition-all flex items-center justify-center`}
                     onClick={() => handleVerseToggle(verse)}
                   >
-                    <h3 className="text-lg font-semibold text-green-600 text-center break-words">
+                    <h3 className="text-sm sm:text-lg font-semibold text-green-600 text-center break-words">
                       {verse.reference}
                     </h3>
                   </div>
@@ -216,21 +216,21 @@ const ReinaValeraBooks: React.FC = () => {
 
       {/* Modal */}
       {showModal && (
-        <div onClick={handleCloseModal} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-2xl shadow-lg shadow-amber-300 max-w-2xl w-full">
-            <h3 className="text-xl font-bold text-green-600 mb-4 flex justify-between items-center">
-                <span>Texto de los versículos seleccionados:</span>
-                <button
-              className="text-gray-600 hover:text-gray-900"
-              onClick={() => setShowModal(false)}
-            >
-              ✕
-            </button>
-
+        <div
+          onClick={handleCloseModal}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg max-w-lg sm:max-w-2xl w-full">
+            <h3 className="text-lg sm:text-xl font-bold text-green-600 mb-4 flex justify-between items-center">
+              <span>Texto de los versículos seleccionados:</span>
+              <button
+                className="text-gray-600 hover:text-gray-900"
+                onClick={() => setShowModal(false)}
+              >
+                ✕
+              </button>
             </h3>
-            
-            <div className="text-lg text-gray-700 whitespace-pre-wrap relative">
-            
+            <div className="text-sm sm:text-lg text-gray-700 whitespace-pre-wrap relative">
               {versesText.join("\n\n")}
             </div>
           </div>
