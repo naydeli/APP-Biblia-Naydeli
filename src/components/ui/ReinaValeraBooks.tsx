@@ -59,6 +59,9 @@ const ReinaValeraBooks: React.FC = () => {
     } finally {
       setLoading(false);
     }
+    setTimeout(() => {
+      document.getElementById("chapters-section")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   const handleChapterClick = async (chapter: any) => {
@@ -74,6 +77,9 @@ const ReinaValeraBooks: React.FC = () => {
     } finally {
       setLoading(false);
     }
+    setTimeout(() => {
+      document.getElementById("verses-section")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   const handleVerseToggle = (verse: any) => {
@@ -111,18 +117,16 @@ const ReinaValeraBooks: React.FC = () => {
   };
 
   const handleCloseModal = () => {
-    deselectAllVerses();
+    deselectAllVerses(); // Deseleccionar versos al cerrar el modal
     setShowModal(false);
   };
 
   return (
     <div className="min-h-screen bg-green-50 flex flex-col text-gray-500 w-full">
       <header className="bg-gradient-to-r from-green-300 to-green-500 py-6 text-center shadow-lg">
-        <h1 className="text-4xl font-extrabold text-white">Biblia Reina Valera</h1>
+        <h1 className="text-4xl font-extrabold text-white">Biblia Reina Valera </h1>
       </header>
-
       <div className="flex flex-1 flex-col md:flex-row overflow-hidden">
-        {/* Sidebar - Lista de Libros */}
         <div className="bg-white p-6 md:w-1/3 overflow-y-auto border-r border-gray-500">
           <input
             type="text"
@@ -132,7 +136,7 @@ const ReinaValeraBooks: React.FC = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
           {loading && <p className="text-center text-green-500">Cargando...</p>}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {filteredBooks.map((book) => (
               <div
                 key={book.id}
@@ -147,12 +151,9 @@ const ReinaValeraBooks: React.FC = () => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 flex flex-col p-6 overflow-y-auto">
           {!selectedBook ? (
-            <p className="text-center text-green-500 text-lg">
-              Selecciona un libro para empezar
-            </p>
+            <p className="text-center text-green-500 text-lg">Selecciona un libro para empezar</p>
           ) : !selectedChapter ? (
             <div id="chapters-section" className="max-h-[50vh] sm:max-h-full overflow-y-auto">
               <button
@@ -161,9 +162,10 @@ const ReinaValeraBooks: React.FC = () => {
               >
                 <ArrowLeft className="mr-2 inline-block" /> Volver a los libros
               </button>
-
+            
               <h2 className="text-2xl font-bold mb-4 text-green-600">{selectedBook.name}</h2>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+              <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
+                
                 {chapters.slice(1).map((chapter) => (
                   <div
                     key={chapter.id}
@@ -186,13 +188,13 @@ const ReinaValeraBooks: React.FC = () => {
                 >
                   <ArrowLeft className="mr-2 inline-block" /> Volver al capítulo
                 </button>
-
+                
                 <button
-                  className="px-4 py-2 bg-green-500 text-white rounded-3xl shadow hover:bg-green-600 focus:outline-none"
+                  className="px-4 py-2  bg-green-500 text-white rounded-3xl shadow hover:bg-green-600 focus:outline-none"
                   onClick={fetchVersesText}
                   disabled={selectedVerses.length === 0 || loading}
                 >
-                  {loading ? "Cargando..." : "Buscar versículo"}
+                  {loading ? "Cargando..." : "Buscar versiculo"}
                 </button>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
@@ -203,7 +205,7 @@ const ReinaValeraBooks: React.FC = () => {
                       selectedVerses.some((v) => v.id === verse.id)
                         ? "bg-green-400"
                         : "bg-green-200"
-                    } rounded-3xl shadow-lg cursor-pointer hover:shadow-2xl transition-all flex items-center justify-center`}
+                    } rounded-3xl shadow-lg cursor-pointer hover:shadow-2xl  transition-all flex items-center justify-center`}
                     onClick={() => handleVerseToggle(verse)}
                   >
                     <h3 className="text-lg font-semibold text-green-600 text-center break-words">
@@ -217,44 +219,49 @@ const ReinaValeraBooks: React.FC = () => {
         </div>
       </div>
 
+        
       {/* Modal */}
-      {showModal && (
-        <div
-          onClick={handleCloseModal}
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white p-8 rounded-2xl shadow-2xl shadow-green-500 max-w-3xl w-full max-h-[85vh] overflow-hidden relative"
-          >
+     {showModal && (
+       <div
+         onClick={handleCloseModal}
+         className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+         >
+         <div
+           onClick={(e) => e.stopPropagation()} // Evita cerrar el modal al hacer clic dentro del contenido
+           className="bg-white p-8 rounded-2xl shadow-2xl shadow-green-500 max-w-3xl w-full max-h-[85vh] overflow-hidden relative">
+           {/* Header del Modal */}
             <div className="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
               <h3 className="text-xl font-bold text-green-700">{selectedBook.name}</h3>
               <button
-                className="text-gray-600 hover:text-gray-900 focus:outline-none text-3xl"
-                onClick={handleCloseModal}
-              >
-                ✕
-              </button>
+              className="text-gray-600 hover:text-gray-900 focus:outline-none text-3xl"
+             onClick={handleCloseModal}>
+             ✕
+             </button>
             </div>
 
-            <div className="text-lg text-gray-800 whitespace-pre-wrap overflow-y-auto max-h-[70vh] pr-4">
+           {/* Contenido del Modal */}
+           <div className="text-lg text-gray-800 whitespace-pre-wrap overflow-y-auto max-h-[70vh] pr-4">
               {versesText.length > 0 ? (
-                versesText.map((verse, index) => (
-                  <div key={index} className="mb-2">
-                    <div className="bg-green-50 text-green-800 p-4 rounded-lg shadow-md">
-                      <p className="font-medium leading-relaxed">{verse}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-gray-500 text-center">No hay versículos seleccionados.</p>
-                </div>
+               versesText.map((verse, index) => (
+               <div key={index} className="mb-2">
+                 <div className="bg-green-50 text-green-800 p-4 rounded-lg shadow-md">
+                   <p className="font-medium leading-relaxed">{verse}</p>
+                 </div>
+               </div>
+               ))
+               ) : (
+               <div className="flex items-center justify-center h-full">
+                 <p className="text-gray-500 text-center">No hay versículos seleccionados.</p>
+               </div>
               )}
-            </div>
+           </div>
+
+      
           </div>
-        </div>
+       </div>
       )}
+
+
     </div>
   );
 };
