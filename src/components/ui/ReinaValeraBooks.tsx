@@ -6,6 +6,7 @@ import {
   getVerseText,
 } from "./api"; // Importa las funciones de la API
 import { ArrowLeft,  LogOut } from "lucide-react";
+import {FaBible } from "react-icons/fa";
 
 import { getAuth, signOut } from "firebase/auth"; // Importar Firebase Auth
 
@@ -156,6 +157,7 @@ const ReinaValeraBooks: React.FC = () => {
   return (
     <div className="min-h-screen bg-green-50 flex flex-col text-gray-500 w-full">
       <header className="bg-gradient-to-r from-green-300 to-green-500 h-20 px-6 shadow-lg flex items-center justify-center relative">
+        <FaBible className="text-green-800 text-3xl mx-4 " />
         <h1 className="text-4xl font-extrabold text-white">Biblia Reina Valera</h1>
        <button
           onClick={handleLogout}
