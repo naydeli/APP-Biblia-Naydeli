@@ -5,9 +5,15 @@ import {
   getChapterVerses,
   getVerseText,
 } from "./api"; // Importa las funciones de la API
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft,  LogOut } from "lucide-react";
+
+import { getAuth, signOut } from "firebase/auth"; // Importar Firebase Auth
+
+import { useNavigate } from "react-router-dom"; // Para la navegación
 
 const ReinaValeraBooks: React.FC = () => {
+  const auth = getAuth(); // Obtener la instancia de autenticación
+  const navigate = useNavigate(); // Hook de navegación
   const [books, setBooks] = useState<any[]>([]);
   const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
   const [selectedBook, setSelectedBook] = useState<any | null>(null);
@@ -90,18 +96,33 @@ const ReinaValeraBooks: React.FC = () => {
       setSelectedVerses((prev) => [...prev, verse]);
     }
   };
+ 
 
   const fetchVersesText = async () => {
     try {
       setLoading(true);
+  
+      // Ordenar de menor a mayor basado en el número del versículo
+      const sortedVerses = [...selectedVerses].sort((a, b) => {
+        const verseA = parseInt(a.reference.split(":")[1]);
+        const verseB = parseInt(b.reference.split(":")[1]);
+        return verseA - verseB; // Orden ascendente
+      });
+  
+      // Actualizar el estado con los versículos ordenados
+      setSelectedVerses(sortedVerses);
+  
+      // Obtener los textos de los versículos en el orden correcto
       const texts = await Promise.all(
-        selectedVerses.map(async (verse) => {
+        sortedVerses.map(async (verse) => {
           const data = await getVerseText(verse.id);
           const parser = new DOMParser();
           const parsedDocument = parser.parseFromString(data.data.content, "text/html");
           return parsedDocument.body.textContent || "";
         })
       );
+  
+      // Actualizar estado con los textos obtenidos
       setVersesText(texts);
       setShowModal(true);
     } catch (error) {
@@ -110,6 +131,9 @@ const ReinaValeraBooks: React.FC = () => {
       setLoading(false);
     }
   };
+  
+
+  
 
   const deselectAllVerses = () => {
     setSelectedVerses([]);
@@ -120,11 +144,26 @@ const ReinaValeraBooks: React.FC = () => {
     deselectAllVerses(); // Deseleccionar versos al cerrar el modal
     setShowModal(false);
   };
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/"); // Redirige al usuario a la pantalla de inicio de sesión
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-green-50 flex flex-col text-gray-500 w-full">
-      <header className="bg-gradient-to-r from-green-300 to-green-500 py-6 text-center shadow-lg">
-        <h1 className="text-4xl font-extrabold text-white">Biblia Reina Valera </h1>
+      <header className="bg-gradient-to-r from-green-300 to-green-500 h-20 px-6 shadow-lg flex items-center justify-center relative">
+        <h1 className="text-4xl font-extrabold text-white">Biblia Reina Valera</h1>
+       <button
+          onClick={handleLogout}
+         className="absolute right-6 top-1/2 transform -translate-y-1/2 flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-3xl shadow-lg transition-all duration-300"
+        >
+        <LogOut className="w-5 h-5" />
+         Cerrar Sesión
+       </button>
       </header>
       <div className="flex flex-1 flex-col md:flex-row overflow-hidden">
         <div className="bg-white p-6 md:w-1/3 overflow-y-auto border-r border-gray-500">
@@ -231,7 +270,12 @@ const ReinaValeraBooks: React.FC = () => {
            className="bg-white p-8 rounded-2xl shadow-2xl shadow-green-500 max-w-3xl w-full max-h-[85vh] overflow-hidden relative">
            {/* Header del Modal */}
             <div className="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
-              <h3 className="text-xl font-bold text-green-700">{selectedBook.name}</h3>
+              <h3 className="text-xl font-bold text-green-700">
+              {selectedBook && selectedChapter && selectedVerses.length > 0
+              ? `${selectedChapter.reference}:${ Math.min(...selectedVerses.map((v) => 
+              parseInt(v.reference.split(':')[1]))) }-${ Math.max(...selectedVerses.map((v) => 
+              parseInt(v.reference.split(':')[1])))}`: "Biblia Reina Valera"}
+              </h3>
               <button
               className="text-gray-600 hover:text-gray-900 focus:outline-none text-3xl"
              onClick={handleCloseModal}>
