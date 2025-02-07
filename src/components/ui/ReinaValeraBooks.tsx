@@ -5,12 +5,16 @@ import {
   getChapterVerses,
   getVerseText,
 } from "./api"; // Importa las funciones de la API
-import { ArrowLeft,  LogOut } from "lucide-react";
-import {FaBible } from "react-icons/fa";
+import { ArrowLeft,  LogOut  } from "lucide-react";
+import {FaBible,  } from "react-icons/fa";
+import { FaCheck } from 'react-icons/fa'; // Importando el icono de check
+
+import { FcGoogle } from "react-icons/fc"; // Icono de Google
+import { AiFillGithub } from "react-icons/ai"; // Icono de GitHub
 
 import { getAuth, signOut } from "firebase/auth"; // Importar Firebase Auth
 
-import { useNavigate } from "react-router-dom"; // Para la navegación
+import { useNavigate,  } from "react-router-dom"; // Para la navegación
 
 const ReinaValeraBooks: React.FC = () => {
   const auth = getAuth(); // Obtener la instancia de autenticación
@@ -26,6 +30,22 @@ const ReinaValeraBooks: React.FC = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() =>{
+    const unsubscribe =auth.onAuthStateChanged((user) => {
+      if (user){
+        setUser({
+          email:user.email,
+          provider: user.providerData[0]?.providerId,
+        });
+      }else{
+        setUser(null);
+      }
+    });
+    return() =>unsubscribe ();
+
+  }, [auth]);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -159,20 +179,33 @@ const ReinaValeraBooks: React.FC = () => {
       <header className="bg-gradient-to-r from-green-300 to-green-500 h-20 px-6 shadow-lg flex items-center justify-center relative">
         <FaBible className="text-green-800 text-3xl mx-4 " />
         <h1 className="text-4xl font-extrabold text-white">Biblia Reina Valera</h1>
-       <button
-          onClick={handleLogout}
-         className="absolute right-6 top-1/2 transform -translate-y-1/2 flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-3xl shadow-lg transition-all duration-300"
-        >
-        <LogOut className="w-5 h-5" />
-         Cerrar Sesión
-       </button>
+        {user && (
+         <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2 sm:gap-4">
+            {/* Contenedor del icono y email */}
+           <div className="flex items-center gap-2 bg-white/40 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full">
+              {user.provider === "google.com" && <FcGoogle className="w-5 h-5 sm:w-6 sm:h-6" />}
+             {user.provider === "github.com" && <AiFillGithub className="w-5 h-5 sm:w-6 sm:h-6 text-black" />}
+             <span className="text-white text-xs sm:text-sm hidden md:inline">{user.email}</span>
+           </div>
+
+           { /* Botón de cerrar sesión */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg transition-all duration-300"
+              >
+              <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden md:inline">Cerrar Sesión</span>
+           </button>
+         </div>
+
+        )}
       </header>
       <div className="flex flex-1 flex-col md:flex-row overflow-hidden">
         <div className="bg-white p-6 md:w-1/3 overflow-y-auto border-r border-gray-500">
           <input
             type="text"
             placeholder="Buscar libro..."
-            className="p-2 w-full rounded-lg border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 mb-9"
+            className="p-2 w-full rounded-3xl border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 mb-9"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -230,13 +263,25 @@ const ReinaValeraBooks: React.FC = () => {
                   <ArrowLeft className="mr-2 inline-block" /> Volver al capítulo
                 </button>
                 
+                
+
                 <button
-                  className="px-4 py-2  bg-green-500 text-white rounded-3xl shadow hover:bg-green-600 focus:outline-none"
-                  onClick={fetchVersesText}
-                  disabled={selectedVerses.length === 0 || loading}
+                 className="px-4 py-2 bg-green-500 text-white rounded-3xl shadow hover:bg-green-600 focus:outline-none flex items-center justify-center gap-2"
+                 onClick={fetchVersesText}
+                 disabled={loading}
                 >
-                  {loading ? "Cargando..." : "Buscar versiculo"}
-                </button>
+                 {/* Icono de check visible siempre que no esté cargando */}
+                 {!loading && <FaCheck className="w-5 h-5 sm:hidden" />}
+
+                  {/* Texto visible en pantallas grandes, oculto en móviles */}
+                  <span className="hidden sm:block">
+                    {loading ? "Cargando..." : "Buscar versículo"}
+                  </span>
+
+                     {/* Icono de check visible en pantallas grandes */}
+                     {!loading && <FaCheck className="w-5 h-5 hidden sm:block ml-2" />}
+               </button>
+
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
                 {verses.map((verse) => (
@@ -291,7 +336,7 @@ const ReinaValeraBooks: React.FC = () => {
                versesText.map((verse, index) => (
                <div key={index} className="mb-2">
                  <div className="bg-green-50 text-green-800 p-4 rounded-lg shadow-md">
-                   <p className="font-medium leading-relaxed">{verse}</p>
+                   <p className="font-medium  leading-relaxed">{verse}</p>
                  </div>
                </div>
                ))
