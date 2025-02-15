@@ -1,4 +1,4 @@
-import { describe, it, expect, vi , beforeEach} from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ReinaValeraBooks from '../ReinaValeraBooks';
 import {
@@ -15,22 +15,22 @@ vi.mock('../api', () => ({
   getVerseText: vi.fn(),
 }));
 
-describe('ReinaValeraBooks Component', () => {
+describe('Componente ReinaValeraBooks', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders without crashing', () => {
+  it('se renderiza sin fallar', () => {
     render(<ReinaValeraBooks />);
     expect(screen.getByText(/Biblia Reina Valera/i)).toBeInTheDocument();
   });
 
-  it('fetches and displays books on load', async () => {
-    const mockBooks = [
+  it('obtiene y muestra los libros al cargarse', async () => {
+    const librosMock = [
       { id: 1, name: 'Génesis' },
       { id: 2, name: 'Éxodo' },
     ];
-    getReinaValeraBooks.mockResolvedValueOnce({ data: mockBooks });
+    getReinaValeraBooks.mockResolvedValueOnce({ data: librosMock });
 
     render(<ReinaValeraBooks />);
 
@@ -39,12 +39,12 @@ describe('ReinaValeraBooks Component', () => {
     expect(screen.getByText('Éxodo')).toBeInTheDocument();
   });
 
-  it('filters books by search input', async () => {
-    const mockBooks = [
+  it('filtra los libros según la búsqueda', async () => {
+    const librosMock = [
       { id: 1, name: 'Génesis' },
       { id: 2, name: 'Éxodo' },
     ];
-    getReinaValeraBooks.mockResolvedValueOnce({ data: mockBooks });
+    getReinaValeraBooks.mockResolvedValueOnce({ data: librosMock });
 
     render(<ReinaValeraBooks />);
 
@@ -57,15 +57,15 @@ describe('ReinaValeraBooks Component', () => {
     expect(screen.queryByText('Éxodo')).not.toBeInTheDocument();
   });
 
-  it('fetches and displays chapters when a book is selected', async () => {
-    const mockBooks = [{ id: 1, name: 'Génesis' }];
-    const mockChapters = [
+  it('obtiene y muestra los capítulos cuando se selecciona un libro', async () => {
+    const librosMock = [{ id: 1, name: 'Génesis' }];
+    const capitulosMock = [
       { id: 101, reference: 'Génesis 1' },
       { id: 102, reference: 'Génesis 2' },
     ];
 
-    getReinaValeraBooks.mockResolvedValueOnce({ data: mockBooks });
-    getBookChapters.mockResolvedValueOnce({ data: mockChapters });
+    getReinaValeraBooks.mockResolvedValueOnce({ data: librosMock });
+    getBookChapters.mockResolvedValueOnce({ data: capitulosMock });
 
     render(<ReinaValeraBooks />);
 
@@ -76,15 +76,15 @@ describe('ReinaValeraBooks Component', () => {
     expect(screen.getByText('Génesis 2')).toBeInTheDocument();
   });
 
-  it('fetches and displays verses when a chapter is selected', async () => {
-    const mockChapters = [{ id: 101, reference: 'Génesis 1' }];
-    const mockVerses = [
+  it('obtiene y muestra los versículos cuando se selecciona un capítulo', async () => {
+    const capitulosMock = [{ id: 101, reference: 'Génesis 1' }];
+    const versiculosMock = [
       { id: 1001, reference: 'Génesis 1:1' },
       { id: 1002, reference: 'Génesis 1:2' },
     ];
 
-    getBookChapters.mockResolvedValueOnce({ data: mockChapters });
-    getChapterVerses.mockResolvedValueOnce({ data: mockVerses });
+    getBookChapters.mockResolvedValueOnce({ data: capitulosMock });
+    getChapterVerses.mockResolvedValueOnce({ data: versiculosMock });
 
     render(<ReinaValeraBooks />);
 
@@ -94,12 +94,12 @@ describe('ReinaValeraBooks Component', () => {
     expect(screen.getByText('Génesis 1:2')).toBeInTheDocument();
   });
 
-  it('fetches and displays selected verses text in modal', async () => {
-    const mockVerses = [{ id: 1001, reference: 'Génesis 1:1' }];
-    const mockText = { data: { content: '<p>En el principio creó Dios los cielos y la tierra.</p>' } };
+  it('obtiene y muestra el texto del versículo seleccionado en un modal', async () => {
+    const versiculosMock = [{ id: 1001, reference: 'Génesis 1:1' }];
+    const textoMock = { data: { content: '<p>En el principio creó Dios los cielos y la tierra.</p>' } };
 
-    getChapterVerses.mockResolvedValueOnce({ data: mockVerses });
-    getVerseText.mockResolvedValueOnce(mockText);
+    getChapterVerses.mockResolvedValueOnce({ data: versiculosMock });
+    getVerseText.mockResolvedValueOnce(textoMock);
 
     render(<ReinaValeraBooks />);
 
